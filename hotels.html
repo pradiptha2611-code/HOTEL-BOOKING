@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>StayEase - Hotels</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">
+        🏨 StayEase
+    </div>
+
+    <div class="nav-links">
+
+        <a href="index.html">Home</a>
+
+        <a href="hotels.html">Hotels</a>
+
+        <a href="wishlist.html">Wishlist</a>
+
+        <a href="my-bookings.html">My Bookings</a>
+
+        <a href="login.html">Login</a>
+
+        <a href="signup.html">Register</a>
+
+    </div>
+
+</nav>
+
+
+<section class="section">
+
+    <div class="section-title">
+
+        <h1>Available Hotels</h1>
+
+        <p>Choose the hotel that suits you</p>
+
+    </div>
+
+
+    <!-- FILTER -->
+
+    <div class="search-box">
+
+        <select id="hotelLocation">
+
+            <option value="">All Locations</option>
+
+            <option value="Hyderabad">
+                Hyderabad
+            </option>
+
+            <option value="Bangalore">
+                Bangalore
+            </option>
+
+            <option value="Goa">
+                Goa
+            </option>
+
+            <option value="Mumbai">
+                Mumbai
+            </option>
+
+            <option value="Delhi">
+                Delhi
+            </option>
+
+        </select>
+
+
+        <input
+            type="number"
+            id="maxPrice"
+            placeholder="Maximum Price">
+
+
+        <select id="minRating">
+    <option value="0">All Ratings</option>
+    <option value="4">4+ ⭐</option>
+    <option value="4.5">4.5+ ⭐</option>
+    <option value="4.7">4.7+ ⭐</option>
+</select>
+
+
+        <button
+            class="btn btn-primary"
+            type="button"
+            onclick="filterHotels()">
+
+            🔍 Filter
+
+        </button>
+
+
+        <button
+            class="btn"
+            type="button"
+            onclick="resetHotelSearch()">
+
+            Reset
+
+        </button>
+
+    </div>
+
+
+    <p id="resultText"></p>
+
+
+    <!-- HOTEL LIST -->
+
+    <div
+        id="hotelList"
+        class="hotel-grid">
+    </div>
+
+</section>
+
+
+<footer>
+
+    <p>
+        © 2026 StayEase. All Rights Reserved.
+    </p>
+
+</footer>
+
+
+<script src="script.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StayEase - Hotel Booking</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<nav class="navbar">
+    <div class="logo">🏨 StayEase</div>
+
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="hotels.html">Hotels</a>
+        <a href="wishlist.html">Wishlist</a>
+        <a href="my-bookings.html">My Bookings</a>
+        <a href="login.html">Login</a>
+        <a href="signup.html">Register</a>
+    </div>
+</nav>
+
+<section class="hero">
+
+    <div class="hero-content">
+        <h1>Find Your Perfect Stay 🏨</h1>
+        <p>Search, compare and book your favourite hotel easily.</p>
+
+        <div class="search-box">
+
+            <select id="destination">
+                <option value="">Select Destination</option>
+                <option value="Hyderabad">Hyderabad</option>
+                <option value="Bangalore">Bangalore</option>
+                <option value="Goa">Goa</option>
+                <option value="Mumbai">Mumbai</option>
+                <option value="Delhi">Delhi</option>
+            </select>
+
+            <input type="date" id="checkIn">
+
+            <input type="date" id="checkOut">
+
+            <select id="guests">
+                <option value="1">1 Guest</option>
+                <option value="2">2 Guests</option>
+                <option value="3">3 Guests</option>
+                <option value="4">4 Guests</option>
+                <option value="5">5 Guests</option>
+                <option value="6">6 Guests</option>
+            </select>
+
+            <button class="btn btn-primary" onclick="searchHotels()">
+                🔍 Search
+            </button>
+
+        </div>
+    </div>
+
+</section>
+
+<section class="section">
+
+    <div class="section-title">
+        <h2>Popular Destinations</h2>
+        <p>Explore our popular hotel destinations</p>
+    </div>
+
+    <div class="hotel-grid">
+
+        <div class="hotel-card" onclick="selectDestination('Hyderabad')">
+            <img src="images/hotel1.jpg">
+            <div class="hotel-info">
+                <h3>Hyderabad</h3>
+                <p>Hotels in Hyderabad</p>
+            </div>
+        </div>
+
+        <div class="hotel-card" onclick="selectDestination('Bangalore')">
+            <img src="images/hotel2.jpg">
+            <div class="hotel-info">
+                <h3>Bangalore</h3>
+                <p>Hotels in Bangalore</p>
+            </div>
+        </div>
+
+        <div class="hotel-card" onclick="selectDestination('Goa')">
+            <img src="images/hotel3.jpg">
+            <div class="hotel-info">
+                <h3>Goa</h3>
+                <p>Hotels in Goa</p>
+            </div>
+        </div>
+
+        <div class="hotel-card" onclick="selectDestination('Mumbai')">
+            <img src="images/hotel4.jpg">
+            <div class="hotel-info">
+                <h3>Mumbai</h3>
+                <p>Hotels in Mumbai</p>
+            </div>
+        </div>
+
+        <div class="hotel-card" onclick="selectDestination('Delhi')">
+            <img src="images/hotel5.jpg">
+            <div class="hotel-info">
+                <h3>Delhi</h3>
+                <p>Hotels in Delhi</p>
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
+<footer>
+    <p>© 2026 StayEase. All Rights Reserved.</p>
+</footer>
+
+<script src="script.js"></script>
+
+</body>
+</html>

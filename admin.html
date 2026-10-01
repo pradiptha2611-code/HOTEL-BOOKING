@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>StayEase - Admin Dashboard</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+</head>
+
+
+<body>
+
+
+<nav class="navbar">
+
+    <div class="logo">
+        🏨 StayEase Admin
+    </div>
+
+
+    <div class="nav-links">
+
+        <a href="admin.html">
+            Dashboard
+        </a>
+
+        <a href="index.html">
+            Website
+        </a>
+
+        <a
+            href="#"
+            onclick="adminLogout()">
+
+            Logout
+
+        </a>
+
+    </div>
+
+</nav>
+
+
+
+<section class="section">
+
+
+    <div class="section-title">
+
+        <h1>
+            👨‍💼 Admin Dashboard
+        </h1>
+
+        <p>
+            Manage all StayEase bookings
+        </p>
+
+    </div>
+
+
+
+    <!-- DASHBOARD CARDS -->
+
+    <div class="hotel-grid">
+
+
+        <div class="form-card">
+
+            <h2 id="hotelCount">
+                0
+            </h2>
+
+            <p>
+                🏨 Total Hotels
+            </p>
+
+        </div>
+
+
+
+        <div class="form-card">
+
+            <h2 id="bookingCount">
+                0
+            </h2>
+
+            <p>
+                📋 Total Bookings
+            </p>
+
+        </div>
+
+
+
+        <div class="form-card">
+
+            <h2 id="roomCount">
+                0
+            </h2>
+
+            <p>
+                🛏️ Rooms Booked
+            </p>
+
+        </div>
+
+
+
+        <div class="form-card">
+
+            <h2 id="userCount">
+                0
+            </h2>
+
+            <p>
+                👤 Users
+            </p>
+
+        </div>
+
+
+
+        <div class="form-card">
+
+            <h2 id="revenue">
+                ₹0
+            </h2>
+
+            <p>
+                💰 Revenue
+            </p>
+
+        </div>
+
+
+    </div>
+
+
+
+    <br>
+
+
+    <!-- ALL BOOKINGS -->
+
+    <div class="section-title">
+
+        <h2>
+            📋 All Room Bookings
+        </h2>
+
+    </div>
+
+
+    <div id="adminBookingList"></div>
+
+
+</section>
+
+
+
+<footer>
+
+    <p>
+        © 2026 StayEase. All Rights Reserved.
+    </p>
+
+</footer>
+
+
+
+<script>
+
+
+/* ADMIN SECURITY */
+
+
+const admin =
+    localStorage.getItem(
+        "loggedInAdmin"
+    );
+
+
+if (!admin) {
+
+    alert(
+        "Admin login required! ❌"
+    );
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+
+/* HOTEL COUNT */
+
+const totalHotels = 15;
+
+
+
+/* LOAD DASHBOARD */
+
+function loadAdminDashboard() {
+
+
+    let bookings =
+        JSON.parse(
+            localStorage.getItem(
+                "myBookings"
+            )
+        );
+
+
+    if (!Array.isArray(bookings)) {
+
+        bookings = [];
+
+    }
+
+
+    /* Total hotels */
+
+    document.getElementById(
+        "hotelCount"
+    ).textContent =
+        totalHotels;
+
+
+
+    /* Total bookings */
+
+    document.getElementById(
+        "bookingCount"
+    ).textContent =
+        bookings.length;
+
+
+
+    /* Rooms booked */
+
+    const activeBookings =
+        bookings.filter(
+            function(booking) {
+
+                return (
+                    booking.status !==
+                    "Cancelled"
+                );
+
+            }
+        );
+
+
+    document.getElementById(
+        "roomCount"
+    ).textContent =
+        activeBookings.length;
+
+
+
+    /* Users */
+
+    const users =
+        new Set(
+            bookings.map(
+                function(booking) {
+
+                    return booking.email;
+
+                }
+            )
+        );
+
+
+    document.getElementById(
+        "userCount"
+    ).textContent =
+        users.size;
+
+
+
+    /* Revenue */
+
+    let revenue = 0;
+
+
+    activeBookings.forEach(
+        function(booking) {
+
+            if (booking.total) {
+
+                revenue +=
+                    Number(
+                        booking.total
+                    );
+
+            }
+
+            else if (
+                booking.room &&
+                booking.room.price
+            ) {
+
+                revenue +=
+                    Number(
+                        booking.room.price
+                    );
+
+            }
+
+        }
+    );
+
+
+    document.getElementById(
+        "revenue"
+    ).textContent =
+        "₹" + revenue;
+
+
+
+    displayAdminBookings();
+
+}
+
+
+
+/* DISPLAY ALL BOOKINGS */
+
+function displayAdminBookings() {
+
+
+    const container =
+        document.getElementById(
+            "adminBookingList"
+        );
+
+
+    let bookings =
+        JSON.parse(
+            localStorage.getItem(
+                "myBookings"
+            )
+        );
+
+
+    if (!Array.isArray(bookings)) {
+
+        bookings = [];
+
+    }
+
+
+    container.innerHTML = "";
+
+
+    if (bookings.length === 0) {
+
+        container.innerHTML = `
+
+            <div class="form-card">
+
+                <h2>
+                    📭 No Room Bookings
+                </h2>
+
+                <p>
+                    No rooms have been booked yet.
+                </p>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+
+    bookings.forEach(
+        function(booking, index) {
+
+
+            const hotel =
+                booking.hotel || {};
+
+
+            const room =
+                booking.room || {};
+
+
+            const status =
+                booking.status ||
+                "Confirmed";
+
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+
+            card.className =
+                "form-card";
+
+
+            card.innerHTML = `
+
+                <h2>
+                    🏨
+                    ${hotel.name || "Hotel"}
+                </h2>
+
+
+                <p>
+                    📍
+                    <strong>Location:</strong>
+                    ${hotel.location || "-"}
+                </p>
+
+
+                <p>
+                    🛏️
+                    <strong>Room:</strong>
+                    ${room.name || "-"}
+                </p>
+
+
+                <p>
+                    💰
+                    <strong>Room Price:</strong>
+                    ₹${room.price || 0}
+                </p>
+
+
+                <p>
+                    👤
+                    <strong>Guest:</strong>
+                    ${booking.guestName || "-"}
+                </p>
+
+
+                <p>
+                    📧
+                    <strong>Email:</strong>
+                    ${booking.email || "-"}
+                </p>
+
+
+                <p>
+                    📱
+                    <strong>Phone:</strong>
+                    ${booking.phone || "-"}
+                </p>
+
+
+                <p>
+                    🔖
+                    <strong>Booking ID:</strong>
+                    ${booking.bookingId || "-"}
+                </p>
+
+
+                <p>
+                    📅
+                    <strong>Booking Date:</strong>
+                    ${booking.bookingDate || "-"}
+                </p>
+
+
+                <p>
+                    💳
+                    <strong>Payment:</strong>
+                    ${booking.paymentMethod || "-"}
+                </p>
+
+
+                <p>
+                    ${
+                        status === "Cancelled"
+                        ? "🚫"
+                        : "🟢"
+                    }
+
+                    <strong>Status:</strong>
+                    ${status}
+
+                </p>
+
+
+                <br>
+
+
+                ${
+                    status === "Confirmed"
+
+                    ?
+
+                    `
+                    <button
+                        class="btn"
+                        onclick="cancelAdminBooking(${index})">
+
+                        🚫 Cancel
+
+                    </button>
+                    `
+
+                    :
+
+                    ""
+                }
+
+
+                <button
+                    class="btn"
+                    onclick="deleteAdminBooking(${index})">
+
+                    🗑️ Delete
+
+                </button>
+
+            `;
+
+
+            container.appendChild(
+                card
+            );
+
+        }
+    );
+
+}
+
+
+
+/* ADMIN CANCEL */
+
+function cancelAdminBooking(index) {
+
+
+    let bookings =
+        JSON.parse(
+            localStorage.getItem(
+                "myBookings"
+            )
+        );
+
+
+    if (!Array.isArray(bookings)) {
+
+        return;
+
+    }
+
+
+    if (
+        !confirm(
+            "Cancel this booking?"
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    bookings[index].status =
+        "Cancelled";
+
+
+    bookings[index].cancelledDate =
+        new Date().toLocaleString();
+
+
+    localStorage.setItem(
+        "myBookings",
+        JSON.stringify(bookings)
+    );
+
+
+    alert(
+        "Booking cancelled! 🚫"
+    );
+
+
+    loadAdminDashboard();
+
+}
+
+
+
+/* ADMIN DELETE */
+
+function deleteAdminBooking(index) {
+
+
+    let bookings =
+        JSON.parse(
+            localStorage.getItem(
+                "myBookings"
+            )
+        );
+
+
+    if (!Array.isArray(bookings)) {
+
+        return;
+
+    }
+
+
+    if (
+        !confirm(
+            "Permanently delete this booking?"
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    bookings.splice(
+        index,
+        1
+    );
+
+
+    localStorage.setItem(
+        "myBookings",
+        JSON.stringify(bookings)
+    );
+
+
+    alert(
+        "Booking deleted successfully! 🗑️"
+    );
+
+
+    loadAdminDashboard();
+
+}
+
+
+
+/* ADMIN LOGOUT */
+
+function adminLogout() {
+
+
+    localStorage.removeItem(
+        "loggedInAdmin"
+    );
+
+
+    alert(
+        "Admin logged out! 👋"
+    );
+
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+
+loadAdminDashboard();
+
+</script>
+
+
+</body>
+
+</html>

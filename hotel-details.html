@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>StayEase - Hotel Details</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- ================= NAVBAR ================= -->
+
+<nav class="navbar">
+
+    <div class="logo">
+        🏨 StayEase
+    </div>
+
+    <div class="nav-links">
+
+        <a href="index.html">Home</a>
+
+        <a href="hotels.html">Hotels</a>
+
+        <a href="wishlist.html">Wishlist</a>
+
+        <a href="my-bookings.html">My Bookings</a>
+
+        <a href="login.html">Login</a>
+
+    </div>
+
+</nav>
+
+
+<!-- ================= HOTEL DETAILS ================= -->
+
+<section class="section">
+
+    <div id="hotelDetails">
+
+        <!-- Hotel details will appear here -->
+
+    </div>
+
+</section>
+
+
+<!-- ================= ROOMS ================= -->
+
+<section class="section">
+
+    <div class="section-title">
+
+        <h2>🛏️ Available Rooms</h2>
+
+        <p>
+            Select a room that suits your stay
+        </p>
+
+    </div>
+
+
+    <div
+        id="roomsList"
+        class="room-grid">
+
+        <!-- Rooms will appear here -->
+
+    </div>
+
+</section>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+    <p>
+        © 2026 StayEase. All Rights Reserved.
+    </p>
+
+</footer>
+
+
+<!-- ================= SCRIPT ================= -->
+
+<script src="script.js"></script>
+
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        console.log(
+            "Hotel Details Page Loaded"
+        );
+
+
+        // ==========================================
+        // GET SELECTED HOTEL
+        // ==========================================
+
+        const hotelData =
+            localStorage.getItem(
+                "selectedHotel"
+            );
+
+
+        console.log(
+            "Selected Hotel:",
+            hotelData
+        );
+
+
+        const hotelDetails =
+            document.getElementById(
+                "hotelDetails"
+            );
+
+
+        const roomsList =
+            document.getElementById(
+                "roomsList"
+            );
+
+
+        // ==========================================
+        // HOTEL NOT FOUND
+        // ==========================================
+
+        if (!hotelData) {
+
+            hotelDetails.innerHTML = `
+
+                <div class="section-title">
+
+                    <h2>
+                        Hotel Not Found ❌
+                    </h2>
+
+                    <p>
+                        Please select a hotel
+                        from the Hotels page.
+                    </p>
+
+                    <br>
+
+                    <a
+                        href="hotels.html"
+                        class="btn btn-primary">
+
+                        Browse Hotels
+
+                    </a>
+
+                </div>
+
+            `;
+
+            roomsList.innerHTML = "";
+
+            return;
+        }
+
+
+        // ==========================================
+        // CONVERT JSON
+        // ==========================================
+
+        let hotel;
+
+        try {
+
+            hotel =
+                JSON.parse(
+                    hotelData
+                );
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "Hotel data error:",
+                error
+            );
+
+            hotelDetails.innerHTML = `
+
+                <div class="section-title">
+
+                    <h2>
+                        Invalid Hotel Data ❌
+                    </h2>
+
+                    <a
+                        href="hotels.html"
+                        class="btn btn-primary">
+
+                        Back to Hotels
+
+                    </a>
+
+                </div>
+
+            `;
+
+            return;
+        }
+
+
+        // ==========================================
+        // DISPLAY HOTEL
+        // ==========================================
+
+        hotelDetails.innerHTML = `
+
+            <div class="hotel-card">
+
+                <img
+                    src="${hotel.image}"
+                    alt="${hotel.name}">
+
+                <div class="hotel-info">
+
+                    <h1>
+                        ${hotel.name}
+                    </h1>
+
+                    <p>
+                        📍 ${hotel.location}
+                    </p>
+
+                    <p>
+                        ⭐ ${hotel.rating}
+                    </p>
+
+                    <h2>
+                        ₹${hotel.price}
+                        <small>/ night</small>
+                    </h2>
+
+                    <p>
+                        Enjoy a comfortable stay
+                        with modern facilities,
+                        excellent service and
+                        convenient location.
+                    </p>
+
+
+                    <br>
+
+
+                    <h3>
+                        Hotel Amenities
+                    </h3>
+
+                    <p>
+                        ✔ Free Wi-Fi
+                        <br>
+                        ✔ Air Conditioning
+                        <br>
+                        ✔ Swimming Pool
+                        <br>
+                        ✔ Restaurant
+                        <br>
+                        ✔ Room Service
+                        <br>
+                        ✔ Parking
+                    </p>
+
+
+                    <br>
+
+
+                    <button
+                        type="button"
+                        class="btn btn-primary"
+                        onclick="addToWishlist(${hotel.id})">
+
+                        ❤️ Add to Wishlist
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        `;
+
+
+        // ==========================================
+        // ROOMS DATA
+        // ==========================================
+
+        const rooms = [
+
+            {
+                name: "Standard Room",
+
+                image: "images/room1.jpg",
+
+                price: hotel.price,
+
+                description:
+                    "Comfortable standard room with basic facilities."
+            },
+
+
+            {
+                name: "Deluxe Room",
+
+                image: "images/room2.jpg",
+
+                price: hotel.price + 1000,
+
+                description:
+                    "Spacious deluxe room with premium facilities."
+            },
+
+
+            {
+                name: "Premium Room",
+
+                image: "images/room3.jpg",
+
+                price: hotel.price + 1500,
+
+                description:
+                    "Premium room with modern amenities."
+            },
+
+
+            {
+                name: "Executive Room",
+
+                image: "images/room4.jpg",
+
+                price: hotel.price + 2000,
+
+                description:
+                    "Executive room suitable for business travellers."
+            },
+
+
+            {
+                name: "Suite Room",
+
+                image: "images/room5.jpg",
+
+                price: hotel.price + 2500,
+
+                description:
+                    "Luxury suite room for a comfortable premium stay."
+            }
+
+        ];
+
+
+        // ==========================================
+        // DISPLAY ROOMS
+        // ==========================================
+
+        roomsList.innerHTML = "";
+
+
+        rooms.forEach(
+            function (room) {
+
+                roomsList.innerHTML += `
+
+                    <div class="room-card">
+
+                        <img
+                            src="${room.image}"
+                            alt="${room.name}">
+
+
+                        <h3>
+                            ${room.name}
+                        </h3>
+
+
+                        <p>
+                            ${room.description}
+                        </p>
+
+
+                        <h3>
+                            ₹${room.price}
+                            / night
+                        </h3>
+
+
+                        <p>
+                            ✔ Free Wi-Fi
+                            <br>
+                            ✔ Air Conditioning
+                            <br>
+                            ✔ Room Service
+                            <br>
+                            ✔ TV
+                        </p>
+
+
+                        <button
+                            type="button"
+                            class="btn btn-primary"
+                            onclick="selectRoom(
+                                '${room.name}',
+                                '${room.image}',
+                                ${room.price}
+                            )">
+
+                            Select Room
+
+                        </button>
+
+                    </div>
+
+                `;
+
+            }
+        );
+
+    }
+);
+
+
+// ==========================================
+// SELECT ROOM
+// ==========================================
+
+function selectRoom(
+    roomName,
+    roomImage,
+    roomPrice
+) {
+
+    console.log(
+        "Room selected:",
+        roomName
+    );
+
+
+    // Get hotel
+    const hotelData =
+        localStorage.getItem(
+            "selectedHotel"
+        );
+
+
+    // ==========================================
+    // HOTEL NOT FOUND
+    // ==========================================
+
+    if (!hotelData) {
+
+        alert(
+            "Hotel information not found! Please select the hotel again."
+        );
+
+        window.location.href =
+            "hotels.html";
+
+        return;
+    }
+
+
+    // ==========================================
+    // CREATE ROOM
+    // ==========================================
+
+    const room = {
+
+        name: roomName,
+
+        image: roomImage,
+
+        price: Number(roomPrice)
+
+    };
+
+
+    // ==========================================
+    // SAVE ROOM
+    // ==========================================
+
+    localStorage.setItem(
+        "selectedRoom",
+        JSON.stringify(room)
+    );
+
+
+    // Make sure selected hotel stays saved
+    localStorage.setItem(
+        "selectedHotel",
+        hotelData
+    );
+
+
+    console.log(
+        "Hotel saved:",
+        localStorage.getItem(
+            "selectedHotel"
+        )
+    );
+
+
+    console.log(
+        "Room saved:",
+        localStorage.getItem(
+            "selectedRoom"
+        )
+    );
+
+
+    // ==========================================
+    // GO TO BOOKING
+    // ==========================================
+
+    window.location.href =
+        "booking.html";
+
+}
+
+</script>
+
+</body>
+
+</html>

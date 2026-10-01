@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - StayEase</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">🏨 StayEase</div>
+
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="hotels.html">Hotels</a>
+        <a href="my-bookings.html">My Bookings</a>
+        <a href="wishlist.html">Wishlist ❤️</a>
+        <a href="login.html">Login</a>
+    </div>
+
+</nav>
+
+<div class="profile-container">
+
+    <div class="profile-card">
+
+        <h1>👤 My Profile</h1>
+
+        <br>
+
+        <div id="profileData"></div>
+
+        <br>
+
+        <div>
+            <a href="my-bookings.html"
+               class="btn btn-primary">
+                My Bookings
+            </a>
+
+            <a href="wishlist.html"
+               class="btn btn-secondary">
+                ❤️ Wishlist
+            </a>
+
+            <button
+                class="btn btn-danger"
+                onclick="logoutUser()">
+                Logout
+            </button>
+        </div>
+
+    </div>
+
+</div>
+
+<footer>
+
+    <div class="footer-content">
+
+        <div>
+            <h3>🏨 StayEase</h3>
+            <p>Find and book your perfect hotel easily.</p>
+        </div>
+
+        <div>
+            <h3>Quick Links</h3>
+            <p><a href="index.html">Home</a></p>
+            <p><a href="hotels.html">Hotels</a></p>
+        </div>
+
+        <div>
+            <h3>Contact</h3>
+            <p>Email: support@stayease.com</p>
+            <p>Phone: +91 9876543210</p>
+        </div>
+
+    </div>
+
+</footer>
+
+<script src="script.js"></script>
+
+<script>
+
+function loadProfile() {
+
+    const user =
+        JSON.parse(localStorage.getItem("user"));
+
+    const loggedUser =
+        localStorage.getItem("loggedUser");
+
+    const container =
+        document.getElementById("profileData");
+
+    if (!user || !loggedUser) {
+
+        container.innerHTML = `
+
+            <div class="empty-state">
+
+                <h2>Please Login</h2>
+
+                <p>
+                    Login to view your profile.
+                </p>
+
+                <br>
+
+                <a href="login.html"
+                   class="btn btn-primary">
+                    Login
+                </a>
+
+            </div>
+
+        `;
+
+        return;
+    }
+
+    const bookings =
+        JSON.parse(localStorage.getItem("bookings")) || [];
+
+    const wishlist =
+        JSON.parse(localStorage.getItem("wishlist")) || [];
+
+    container.innerHTML = `
+
+        <div class="profile-info">
+
+            <div>
+                <strong>Name</strong>
+                <p>${user.name}</p>
+            </div>
+
+            <div>
+                <strong>Email</strong>
+                <p>${user.email}</p>
+            </div>
+
+            <div>
+                <strong>Phone</strong>
+                <p>${user.phone}</p>
+            </div>
+
+            <div>
+                <strong>Status</strong>
+                <p>✅ Active User</p>
+            </div>
+
+            <div>
+                <strong>Total Bookings</strong>
+                <p>${bookings.length}</p>
+            </div>
+
+            <div>
+                <strong>Wishlist</strong>
+                <p>❤️ ${wishlist.length}</p>
+            </div>
+
+        </div>
+
+    `;
+}
+
+loadProfile();
+
+</script>
+
+</body>
+</html>

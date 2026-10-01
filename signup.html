@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StayEase - Register</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<nav class="navbar">
+    <div class="logo">🏨 StayEase</div>
+
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="hotels.html">Hotels</a>
+        <a href="wishlist.html">Wishlist</a>
+        <a href="my-bookings.html">My Bookings</a>
+        <a href="login.html">Login</a>
+        <a href="signup.html">Register</a>
+    </div>
+</nav>
+
+<section class="section">
+
+    <div class="section-title">
+        <h1>Create Account</h1>
+        <p>Register to book your favourite hotels</p>
+    </div>
+
+    <div class="form-card">
+
+        <form id="signupForm">
+
+            <label>Full Name</label>
+            <input
+                type="text"
+                id="name"
+                required
+            >
+
+            <label>Email</label>
+            <input
+                type="email"
+                id="email"
+                required
+            >
+
+            <label>Phone</label>
+            <input
+                type="tel"
+                id="phone"
+                required
+            >
+
+            <label>Password</label>
+            <input
+                type="password"
+                id="password"
+                required
+            >
+
+            <label>Confirm Password</label>
+            <input
+                type="password"
+                id="confirmPassword"
+                required
+            >
+
+            <br>
+
+            <button
+                type="submit"
+                class="btn btn-primary">
+                Register
+            </button>
+
+        </form>
+
+        <p>
+            Already have an account?
+            <a href="login.html">Login</a>
+        </p>
+
+    </div>
+
+</section>
+
+<footer>
+    <p>© 2026 StayEase. All Rights Reserved.</p>
+</footer>
+
+<script>
+document.getElementById("signupForm").addEventListener(
+    "submit",
+    function(event) {
+
+        event.preventDefault();
+
+        const name =
+            document.getElementById("name").value.trim();
+
+        const email =
+            document.getElementById("email").value.trim();
+
+        const phone =
+            document.getElementById("phone").value.trim();
+
+        const password =
+            document.getElementById("password").value;
+
+        const confirmPassword =
+            document.getElementById("confirmPassword").value;
+
+        if (password !== confirmPassword) {
+            alert("Passwords do not match! ❌");
+            return;
+        }
+
+        const user = {
+            name: name,
+            email: email,
+            phone: phone,
+            password: password
+        };
+
+        localStorage.setItem(
+            "registeredUser",
+            JSON.stringify(user)
+        );
+
+        alert("Registration successful! 🎉");
+
+        window.location.href = "login.html";
+    }
+);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StayEase - Booking</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">🏨 StayEase</div>
+
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="hotels.html">Hotels</a>
+        <a href="wishlist.html">Wishlist</a>
+        <a href="my-bookings.html">My Bookings</a>
+        <a href="login.html">Login</a>
+    </div>
+
+</nav>
+
+
+<section class="section">
+
+    <div class="section-title">
+        <h1>Complete Your Booking</h1>
+        <p>Enter your details and confirm your reservation.</p>
+    </div>
+
+
+    <div style="
+        display:grid;
+        grid-template-columns:1fr 1fr;
+        gap:30px;
+    ">
+
+
+        <!-- GUEST DETAILS -->
+
+        <div class="room-card">
+
+            <h2>Guest Details</h2>
+
+            <form id="bookingForm">
+
+                <label>Full Name</label>
+
+                <input
+                    type="text"
+                    id="fullName"
+                    placeholder="Enter your full name"
+                    required>
+
+
+                <label>Email</label>
+
+                <input
+                    type="email"
+                    id="email"
+                    placeholder="Enter your email"
+                    required>
+
+
+                <label>Phone Number</label>
+
+                <input
+                    type="tel"
+                    id="phone"
+                    placeholder="Enter phone number"
+                    required>
+
+
+                <label>Special Request</label>
+
+                <textarea
+                    id="specialRequest"
+                    placeholder="Any special request?">
+                </textarea>
+
+
+                <br>
+
+
+                <button
+                    type="submit"
+                    class="btn btn-primary">
+
+                    Continue to Payment →
+
+                </button>
+
+            </form>
+
+        </div>
+
+
+        <!-- SUMMARY -->
+
+        <div class="room-card">
+
+            <h2>🏨 Booking Summary</h2>
+
+            <div id="bookingSummary">
+                Loading...
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<footer>
+    <p>© 2026 StayEase. All Rights Reserved.</p>
+</footer>
+
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const hotelData =
+        localStorage.getItem("selectedHotel");
+
+    const roomData =
+        localStorage.getItem("selectedRoom");
+
+    const summary =
+        document.getElementById("bookingSummary");
+
+
+    if (!hotelData) {
+
+        summary.innerHTML = `
+            <h3>Hotel information not found ❌</h3>
+
+            <a
+                href="hotels.html"
+                class="btn btn-primary">
+                Browse Hotels
+            </a>
+        `;
+
+        return;
+    }
+
+
+    const hotel =
+        JSON.parse(hotelData);
+
+    const room =
+        roomData
+        ? JSON.parse(roomData)
+        : null;
+
+
+    summary.innerHTML = `
+
+        <img
+            src="${hotel.image}"
+            style="
+                width:100%;
+                height:180px;
+                object-fit:cover;
+                border-radius:10px;
+            ">
+
+        <h2>${hotel.name}</h2>
+
+        <p>📍 ${hotel.location}</p>
+
+        <p>⭐ ${hotel.rating}</p>
+
+        <hr>
+
+        ${
+            room
+            ?
+            `
+            <h3>🛏️ ${room.name}</h3>
+            <p>₹${room.price} / night</p>
+            `
+            :
+            `<p>Room not selected</p>`
+        }
+
+    `;
+
+});
+
+
+// =====================================
+// BOOKING FORM SUBMIT
+// =====================================
+
+document.getElementById("bookingForm")
+.addEventListener("submit", function (event) {
+
+    event.preventDefault();
+
+
+    const hotelData =
+        localStorage.getItem("selectedHotel");
+
+    const roomData =
+        localStorage.getItem("selectedRoom");
+
+
+    if (!hotelData) {
+
+        alert("Hotel information not found!");
+
+        window.location.href =
+            "hotels.html";
+
+        return;
+    }
+
+
+    const bookingData = {
+
+        bookingId:
+            "SE" + Date.now(),
+
+        hotel:
+            JSON.parse(hotelData),
+
+        room:
+            roomData
+            ? JSON.parse(roomData)
+            : null,
+
+        guestName:
+            document.getElementById(
+                "fullName"
+            ).value,
+
+        email:
+            document.getElementById(
+                "email"
+            ).value,
+
+        phone:
+            document.getElementById(
+                "phone"
+            ).value,
+
+        specialRequest:
+            document.getElementById(
+                "specialRequest"
+            ).value,
+
+        status: "Pending Payment",
+
+        bookingDate:
+            new Date().toLocaleString()
+
+    };
+
+
+    // SAVE COMPLETE BOOKING
+
+    localStorage.setItem(
+        "bookingData",
+        JSON.stringify(bookingData)
+    );
+
+
+    console.log(
+        "BOOKING SAVED:",
+        bookingData
+    );
+
+
+    // GO TO PAYMENT
+
+    window.location.href =
+        "payment.html";
+
+});
+
+</script>
+
+</body>
+</html>

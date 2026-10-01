@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Confirmed - StayEase</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">🏨 StayEase</div>
+
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="hotels.html">Hotels</a>
+        <a href="my-bookings.html">My Bookings</a>
+    </div>
+
+</nav>
+
+<div class="confirmation">
+
+    <div class="confirmation-icon">
+        ✅
+    </div>
+
+    <h1>Booking Confirmed!</h1>
+
+    <p>Your hotel booking has been successfully confirmed.</p>
+
+    <div class="booking-id" id="bookingId">
+        Booking ID
+    </div>
+
+    <div id="confirmationDetails"></div>
+
+    <br>
+
+    <a href="my-bookings.html"
+       class="btn btn-primary">
+        My Bookings
+    </a>
+
+    <a href="hotels.html"
+       class="btn btn-secondary">
+        Explore Hotels
+    </a>
+
+    <a href="index.html"
+       class="btn btn-secondary">
+        Home
+    </a>
+
+</div>
+
+<script>
+
+const booking =
+    JSON.parse(localStorage.getItem("lastBooking"));
+
+if (booking) {
+
+    document.getElementById("bookingId").innerText =
+        "Booking ID: " + booking.bookingId;
+
+    document.getElementById("confirmationDetails").innerHTML = `
+
+        <div class="details-card">
+
+            <h3>${booking.hotelName}</h3>
+
+            <p>📍 ${booking.location || ""}</p>
+
+            <p>🛏️ Room: ${booking.roomName || "Standard Room"}</p>
+
+            <p>👤 Guest: ${booking.guestName}</p>
+
+            <p>📧 Email: ${booking.email || ""}</p>
+
+            <p>📅 ${booking.checkin || ""} to ${booking.checkout || ""}</p>
+
+            <p>👥 Guests: ${booking.guests || 1}</p>
+
+            <p>💳 Payment: ${booking.paymentMethod || "Paid"}</p>
+
+            <p class="total">
+                Total: ₹${booking.total || 0}
+            </p>
+
+        </div>
+
+    `;
+
+}
+
+</script>
+
+</body>
+</html>

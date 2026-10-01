@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>StayEase - My Bookings</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+</head>
+
+
+<body>
+
+
+    <nav class="navbar">
+
+        <div class="logo">
+            🏨 StayEase
+        </div>
+
+
+        <div class="nav-links">
+
+            <a href="index.html">Home</a>
+
+            <a href="hotels.html">Hotels</a>
+
+            <a href="wishlist.html">Wishlist</a>
+
+            <a href="my-bookings.html">My Bookings</a>
+
+            <a href="login.html">Login</a>
+
+            <a href="signup.html">Register</a>
+
+        </div>
+
+    </nav>
+
+
+
+    <section class="section">
+
+        <div class="section-title">
+
+            <h1>
+                📋 My Bookings
+            </h1>
+
+            <p>
+                Your hotel room bookings
+            </p>
+
+        </div>
+
+
+        <div id="bookingList"></div>
+
+    </section>
+
+
+
+    <footer>
+
+        <p>
+            © 2026 StayEase. All Rights Reserved.
+        </p>
+
+    </footer>
+
+
+
+<script>
+
+
+function loadBookings() {
+
+    const bookingList =
+        document.getElementById(
+            "bookingList"
+        );
+
+
+    const loggedInUser =
+        JSON.parse(
+            localStorage.getItem(
+                "loggedInUser"
+            )
+        );
+
+
+    if (!loggedInUser) {
+
+        bookingList.innerHTML = `
+
+            <div class="form-card">
+
+                <h2>
+                    🔐 Please Login
+                </h2>
+
+                <p>
+                    Login to view your bookings.
+                </p>
+
+                <br>
+
+                <a href="login.html">
+
+                    <button
+                        class="btn btn-primary">
+
+                        Login
+
+                    </button>
+
+                </a>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    let bookings =
+        JSON.parse(
+            localStorage.getItem(
+                "myBookings"
+            )
+        );
+
+
+    if (!Array.isArray(bookings)) {
+
+        bookings = [];
+
+    }
+
+
+    /* Only current user's bookings */
+
+    bookings =
+        bookings.filter(
+            function(booking) {
+
+                return (
+                    booking.email ===
+                    loggedInUser.email
+                );
+
+            }
+        );
+
+
+    bookingList.innerHTML = "";
+
+
+    if (bookings.length === 0) {
+
+        bookingList.innerHTML = `
+
+            <div class="form-card">
+
+                <h2>
+                    📭 No Bookings Found
+                </h2>
+
+                <p>
+                    You have no room bookings yet.
+                </p>
+
+                <br>
+
+                <a href="hotels.html">
+
+                    <button
+                        class="btn btn-primary">
+
+                        Browse Hotels
+
+                    </button>
+
+                </a>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    bookings.forEach(
+        function(booking) {
+
+            const hotel =
+                booking.hotel || {};
+
+            const room =
+                booking.room || {};
+
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+
+            card.className =
+                "form-card";
+
+
+            const status =
+                booking.status ||
+                "Confirmed";
+
+
+            card.innerHTML = `
+
+                <h2>
+                    🏨
+                    ${hotel.name || "Hotel"}
+                </h2>
+
+                <p>
+                    📍
+                    <strong>Location:</strong>
+                    ${hotel.location || "-"}
+                </p>
+
+
+                <hr>
+
+
+                <p>
+                    🛏️
+                    <strong>Room:</strong>
+                    ${room.name || "-"}
+                </p>
+
+
+                <p>
+                    💰
+                    <strong>Room Price:</strong>
+                    ₹${room.price || 0}
+                </p>
+
+
+                <p>
+                    👤
+                    <strong>Guest:</strong>
+                    ${booking.guestName || "-"}
+                </p>
+
+
+                <p>
+                    📧
+                    <strong>Email:</strong>
+                    ${booking.email || "-"}
+                </p>
+
+
+                <p>
+                    📱
+                    <strong>Phone:</strong>
+                    ${booking.phone || "-"}
+                </p>
+
+
+                <p>
+                    💳
+                    <strong>Payment:</strong>
+                    ${booking.paymentMethod || "-"}
+                </p>
+
+
+                <p>
+                    🔖
+                    <strong>Booking ID:</strong>
+                    ${booking.bookingId || "-"}
+                </p>
+
+
+                <p>
+                    📅
+                    <strong>Booking Date:</strong>
+                    ${booking.bookingDate || "-"}
+                </p>
+
+
+                <p>
+                    ${
+                        status === "Cancelled"
+                        ? "🚫"
+                        : "🟢"
+                    }
+
+                    <strong>Status:</strong>
+                    ${status}
+
+                </p>
+
+
+                <br>
+
+
+                ${
+                    status === "Confirmed"
+
+                    ?
+
+                    `
+                    <button
+                        class="btn"
+                        onclick="cancelBooking('${booking.bookingId}')">
+
+                        🚫 Cancel Booking
+
+                    </button>
+                    `
+
+                    :
+
+                    ""
+                }
+
+            `;
+
+
+            bookingList.appendChild(
+                card
+            );
+
+        }
+    );
+
+}
+
+
+
+function cancelBooking(bookingId) {
+
+    let bookings =
+        JSON.parse(
+            localStorage.getItem(
+                "myBookings"
+            )
+        );
+
+
+    if (!Array.isArray(bookings)) {
+
+        return;
+
+    }
+
+
+    if (
+        !confirm(
+            "Are you sure you want to cancel this booking?"
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    const index =
+        bookings.findIndex(
+            function(booking) {
+
+                return (
+                    booking.bookingId ===
+                    bookingId
+                );
+
+            }
+        );
+
+
+    if (index !== -1) {
+
+        bookings[index].status =
+            "Cancelled";
+
+        bookings[index].cancelledDate =
+            new Date().toLocaleString();
+
+
+        localStorage.setItem(
+            "myBookings",
+            JSON.stringify(bookings)
+        );
+
+    }
+
+
+    alert(
+        "Booking cancelled successfully! 🚫"
+    );
+
+
+    loadBookings();
+
+}
+
+
+
+loadBookings();
+
+</script>
+
+
+</body>
+
+</html>
